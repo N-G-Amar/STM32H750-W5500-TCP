@@ -356,9 +356,9 @@ void SystemClock_Config(void)
 
   */
 
-  \_\_HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
-  while(!\_\_HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {}
+  while(!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {}
 
   /** Initializes the RCC Oscillators according to the specified parameters
 
@@ -390,7 +390,7 @@ void SystemClock_Config(void)
 
   RCC_OscInitStruct.PLL.PLLFRACN = 0;
 
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != *HAL_OK*)
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
 
   {
 
@@ -422,7 +422,7 @@ void SystemClock_Config(void)
 
   RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != *HAL_OK*)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
 
   {
 
@@ -500,7 +500,7 @@ static void MX_SPI1_Init(void)
 
   hspi1.Init.IOSwap = SPI_IO_SWAP_DISABLE;
 
-  if (HAL_SPI_Init(&hspi1) != *HAL_OK*)
+  if (HAL_SPI_Init(&hspi1) != HAL_OK)
 
   {
 
@@ -536,19 +536,19 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
 
-  \_\_HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOH_CLK_ENABLE();
 
-  \_\_HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
 
-  \_\_HAL_RCC_GPIOA_CLK_ENABLE();
-
-  /*Configure GPIO pin Output Level */
-
-  HAL_GPIO_WritePin(W5500_RST_GPIO_Port, W5500_RST_Pin, *GPIO_PIN_SET*);
+  __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
 
-  HAL_GPIO_WritePin(W5500_CS_GPIO_Port, W5500_CS_Pin, *GPIO_PIN_SET*);
+  HAL_GPIO_WritePin(W5500_RST_GPIO_Port, W5500_RST_Pin, GPIO_PIN_SET);
+
+  /*Configure GPIO pin Output Level */
+
+  HAL_GPIO_WritePin(W5500_CS_GPIO_Port, W5500_CS_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin : W5500_RST_Pin */
 
@@ -592,11 +592,11 @@ static uint8_t W5500_ReadVersion(void)
 
     /* Hardware reset */
 
-    HAL_GPIO_WritePin(W5500_RST_GPIO_Port, W5500_RST_Pin, *GPIO_PIN_RESET*);
+    HAL_GPIO_WritePin(W5500_RST_GPIO_Port, W5500_RST_Pin, GPIO_PIN_RESET);
 
     HAL_Delay(2);
 
-    HAL_GPIO_WritePin(W5500_RST_GPIO_Port, W5500_RST_Pin, *GPIO_PIN_SET*);
+    HAL_GPIO_WritePin(W5500_RST_GPIO_Port, W5500_RST_Pin, GPIO_PIN_SET);
 
     HAL_Delay(50);
 
@@ -620,7 +620,7 @@ static uint8_t W5500_ReadVersion(void)
 
     /* Select W5500 */
 
-    HAL_GPIO_WritePin(W5500_CS_GPIO_Port, W5500_CS_Pin, *GPIO_PIN_RESET*);
+    HAL_GPIO_WritePin(W5500_CS_GPIO_Port, W5500_CS_Pin, GPIO_PIN_RESET);
 
     /* Send address + control byte */
 
@@ -632,7 +632,7 @@ static uint8_t W5500_ReadVersion(void)
 
     /* Deselect W5500 */
 
-    HAL_GPIO_WritePin(W5500_CS_GPIO_Port, W5500_CS_Pin, *GPIO_PIN_SET*);
+    HAL_GPIO_WritePin(W5500_CS_GPIO_Port, W5500_CS_Pin, GPIO_PIN_SET);
 
     return version;
 
@@ -660,7 +660,7 @@ static HAL_StatusTypeDef W5500_WriteCommon(uint16_t address,
 
                       W5500_CS_Pin,
 
-                      *GPIO_PIN_RESET*);
+                      GPIO_PIN_RESET);
 
     status = HAL_SPI_Transmit(&hspi1,
 
@@ -670,7 +670,7 @@ static HAL_StatusTypeDef W5500_WriteCommon(uint16_t address,
 
                               HAL_MAX_DELAY);
 
-    if (status == *HAL_OK*)
+    if (status == HAL_OK)
 
     {
 
@@ -688,7 +688,7 @@ static HAL_StatusTypeDef W5500_WriteCommon(uint16_t address,
 
                       W5500_CS_Pin,
 
-                      *GPIO_PIN_SET*);
+                      GPIO_PIN_SET);
 
     return status;
 
@@ -714,7 +714,7 @@ static uint8_t W5500_ReadCommon(uint16_t address,
 
                       W5500_CS_Pin,
 
-                      *GPIO_PIN_RESET*);
+                      GPIO_PIN_RESET);
 
     if (HAL_SPI_Transmit(&hspi1,
 
@@ -722,7 +722,7 @@ static uint8_t W5500_ReadCommon(uint16_t address,
 
                          3,
 
-                         HAL_MAX_DELAY) != *HAL_OK*)
+                         HAL_MAX_DELAY) != HAL_OK)
 
     {
 
@@ -730,7 +730,7 @@ static uint8_t W5500_ReadCommon(uint16_t address,
 
                           W5500_CS_Pin,
 
-                          *GPIO_PIN_SET*);
+                          GPIO_PIN_SET);
 
         return 0;
 
@@ -742,7 +742,7 @@ static uint8_t W5500_ReadCommon(uint16_t address,
 
                         length,
 
-                        HAL_MAX_DELAY) != *HAL_OK*)
+                        HAL_MAX_DELAY) != HAL_OK)
 
     {
 
@@ -750,7 +750,7 @@ static uint8_t W5500_ReadCommon(uint16_t address,
 
                           W5500_CS_Pin,
 
-                          *GPIO_PIN_SET*);
+                          GPIO_PIN_SET);
 
         return 0;
 
@@ -760,7 +760,7 @@ static uint8_t W5500_ReadCommon(uint16_t address,
 
                       W5500_CS_Pin,
 
-                      *GPIO_PIN_SET*);
+                      GPIO_PIN_SET);
 
     return 1;
 
@@ -802,19 +802,19 @@ static uint8_t W5500_ConfigureNetwork(void)
 
     };
 
-    if (W5500_WriteCommon(0x0009, mac, 6) != *HAL_OK*)
+    if (W5500_WriteCommon(0x0009, mac, 6) != HAL_OK)
 
         return 0;
 
-    if (W5500_WriteCommon(0x0001, gateway, 4) != *HAL_OK*)
+    if (W5500_WriteCommon(0x0001, gateway, 4) != HAL_OK)
 
         return 0;
 
-    if (W5500_WriteCommon(0x0005, subnet, 4) != *HAL_OK*)
+    if (W5500_WriteCommon(0x0005, subnet, 4) != HAL_OK)
 
         return 0;
 
-    if (W5500_WriteCommon(0x000F, ip, 4) != *HAL_OK*)
+    if (W5500_WriteCommon(0x000F, ip, 4) != HAL_OK)
 
         return 0;
 
@@ -836,13 +836,13 @@ static uint8_t W5500_ReadPHYCFGR(void)
 
     command[2] = 0x00;
 
-    HAL_GPIO_WritePin(W5500_CS_GPIO_Port, W5500_CS_Pin, *GPIO_PIN_RESET*);
+    HAL_GPIO_WritePin(W5500_CS_GPIO_Port, W5500_CS_Pin, GPIO_PIN_RESET);
 
     HAL_SPI_Transmit(&hspi1, command, 3, HAL_MAX_DELAY);
 
     HAL_SPI_Receive(&hspi1, &phycfgr, 1, HAL_MAX_DELAY);
 
-    HAL_GPIO_WritePin(W5500_CS_GPIO_Port, W5500_CS_Pin, *GPIO_PIN_SET*);
+    HAL_GPIO_WritePin(W5500_CS_GPIO_Port, W5500_CS_Pin, GPIO_PIN_SET);
 
     return phycfgr;
 
@@ -872,7 +872,7 @@ static uint8_t W5500_BlockWrite(uint8_t bsb,
 
                       W5500_CS_Pin,
 
-                      *GPIO_PIN_RESET*);
+                      GPIO_PIN_RESET);
 
     if (HAL_SPI_Transmit(&hspi1,
 
@@ -880,7 +880,7 @@ static uint8_t W5500_BlockWrite(uint8_t bsb,
 
                          3,
 
-                         HAL_MAX_DELAY) != *HAL_OK*)
+                         HAL_MAX_DELAY) != HAL_OK)
 
     {
 
@@ -888,7 +888,7 @@ static uint8_t W5500_BlockWrite(uint8_t bsb,
 
                           W5500_CS_Pin,
 
-                          *GPIO_PIN_SET*);
+                          GPIO_PIN_SET);
 
         return 0;
 
@@ -900,7 +900,7 @@ static uint8_t W5500_BlockWrite(uint8_t bsb,
 
                          length,
 
-                         HAL_MAX_DELAY) != *HAL_OK*)
+                         HAL_MAX_DELAY) != HAL_OK)
 
     {
 
@@ -908,7 +908,7 @@ static uint8_t W5500_BlockWrite(uint8_t bsb,
 
                           W5500_CS_Pin,
 
-                          *GPIO_PIN_SET*);
+                          GPIO_PIN_SET);
 
         return 0;
 
@@ -918,7 +918,7 @@ static uint8_t W5500_BlockWrite(uint8_t bsb,
 
                       W5500_CS_Pin,
 
-                      *GPIO_PIN_SET*);
+                      GPIO_PIN_SET);
 
     return 1;
 
@@ -948,7 +948,7 @@ HAL_GPIO_WritePin(W5500_CS_GPIO_Port,
 
 W5500_CS_Pin,
 
-*GPIO_PIN_RESET*);
+GPIO_PIN_RESET);
 
 if (HAL_SPI_Transmit(&hspi1,
 
@@ -956,7 +956,7 @@ if (HAL_SPI_Transmit(&hspi1,
 
   3,
 
-  HAL_MAX_DELAY) != *HAL_OK*)
+  HAL_MAX_DELAY) != HAL_OK)
 
 {
 
@@ -964,7 +964,7 @@ HAL_GPIO_WritePin(W5500_CS_GPIO_Port,
 
    W5500_CS_Pin,
 
-   *GPIO_PIN_SET*);
+   GPIO_PIN_SET);
 
 return 0;
 
@@ -976,7 +976,7 @@ if (HAL_SPI_Receive(&hspi1,
 
  length,
 
- HAL_MAX_DELAY) != *HAL_OK*)
+ HAL_MAX_DELAY) != HAL_OK)
 
 {
 
@@ -984,7 +984,7 @@ HAL_GPIO_WritePin(W5500_CS_GPIO_Port,
 
    W5500_CS_Pin,
 
-   *GPIO_PIN_SET*);
+   GPIO_PIN_SET);
 
 return 0;
 
@@ -994,7 +994,7 @@ HAL_GPIO_WritePin(W5500_CS_GPIO_Port,
 
 W5500_CS_Pin,
 
-*GPIO_PIN_SET*);
+GPIO_PIN_SET);
 
 return 1;
 
@@ -1020,7 +1020,7 @@ static uint8_t W5500_TCP_ServerInit(uint16_t port)
 
                           &value,
 
-                          1\))
+                          1))
 
     {
 
@@ -1040,7 +1040,7 @@ static uint8_t W5500_TCP_ServerInit(uint16_t port)
 
                           port_bytes,
 
-                          2\))
+                          2))
 
     {
 
@@ -1058,7 +1058,7 @@ static uint8_t W5500_TCP_ServerInit(uint16_t port)
 
                           &value,
 
-                          1\))
+                          1))
 
     {
 
@@ -1078,7 +1078,7 @@ static uint8_t W5500_TCP_ServerInit(uint16_t port)
 
                           &value,
 
-                          1\))
+                          1))
 
     {
 
@@ -1096,7 +1096,7 @@ static uint8_t W5500_TCP_ServerInit(uint16_t port)
 
                          &status,
 
-                         1\))
+                         1))
 
     {
 
@@ -1132,7 +1132,7 @@ static void W5500_TCP_ServerTask(void)
 
                          &status,
 
-                         1\))
+                         1))
 
     {
 
@@ -1146,7 +1146,7 @@ static void W5500_TCP_ServerTask(void)
 
        CLOSED: reopen the TCP server
 
-       \--------------------------------------------------------- */
+       --------------------------------------------------------- */
 
     if (status == W5500_SOCK_CLOSED)
 
@@ -1164,7 +1164,7 @@ static void W5500_TCP_ServerTask(void)
 
        ESTABLISHED: TCP connection is active
 
-       \--------------------------------------------------------- */
+       --------------------------------------------------------- */
 
     if (status == W5500_SOCK_ESTABLISHED)
 
@@ -1310,7 +1310,7 @@ static void W5500_TCP_ServerTask(void)
 
                               &command,
 
-                              1\))
+                              1))
 
         {
 
@@ -1348,7 +1348,7 @@ static void W5500_TCP_ServerTask(void)
 
        CLOSE_WAIT: remote side closed the connection
 
-       \--------------------------------------------------------- */
+       --------------------------------------------------------- */
 
     else if (status == W5500_SOCK_CLOSE_WAIT)
 
@@ -1364,7 +1364,7 @@ static void W5500_TCP_ServerTask(void)
 
                          &command,
 
-                         1\);
+                         1);
 
         HAL_Delay(2);
 
@@ -1446,7 +1446,7 @@ void Error_Handler(void)
 
   /* User can add his own implementation to report the HAL error return state */
 
-  \_\_disable_irq();
+  __disable_irq();
 
   while (1)
 
