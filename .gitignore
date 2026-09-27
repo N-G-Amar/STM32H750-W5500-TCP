@@ -1,4 +1,4 @@
-# STM32CubeIDE
+# STM32CubeIDE build output
 Debug/
 Release/
 *.elf
@@ -6,12 +6,15 @@ Release/
 *.list
 *.hex
 *.bin
+*.su
+*.d
+*.cyclo
 
-# IDE metadata
-.settings/
-.metadata/
-.project
-.cproject
+# Keep STM32CubeIDE project configuration
+# .settings/
+# .metadata/
+# .project
+# .cproject
 
 # Python
 __pycache__/
