@@ -1,0 +1,24 @@
+# STM32CubeIDE
+Debug/
+Release/
+*.elf
+*.map
+*.list
+*.hex
+*.bin
+
+# IDE metadata
+.settings/
+.metadata/
+.project
+.cproject
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.uv/
+
+# OS
+Thumbs.db
+.DS_Store
